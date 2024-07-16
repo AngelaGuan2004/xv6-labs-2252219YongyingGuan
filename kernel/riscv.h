@@ -287,6 +287,7 @@ intr_get()
   return (x & SSTATUS_SIE) != 0;
 }
 
+// read the current frame pointer(added for backtrace)
 static inline uint64
 r_sp()
 {
@@ -325,6 +326,14 @@ sfence_vma()
 {
   // the zero, zero means flush all TLB entries.
   asm volatile("sfence.vma zero, zero");
+}
+
+static inline uint64
+r_fp()
+{
+  uint64 x;
+  asm volatile("mv %0, s0" : "=r" (x) );
+  return x;
 }
 
 typedef uint64 pte_t;
